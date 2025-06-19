@@ -1,0 +1,6 @@
+apiVersion: v2
+name: three-tier-app
+description: A sample 3-tier app with frontend, backend, and Postgres
+type: application
+version: 0.1.0
+appVersion: "1.0"

@@ -1,0 +1,17 @@
+frontend:
+  image: nginx
+  replicas: 1
+  servicePort: 80
+
+backend:
+  image: hashicorp/http-echo
+  args: ["-text=hello"]
+  replicas: 1
+  servicePort: 5678
+
+postgres:
+  image: postgres:15
+  storage: 1Gi
+  username: admin
+  password: secret
+  database: appdb

@@ -6,7 +6,7 @@ variable "zone" {
   default = "us-central1-a"
 }
 variable "cluster_name" {
-  default = "staging-gke-cluster"
+  default = "company-a-staging-gke-cluster"
 }
 variable "machine_type" {
   default = "e2-medium"
