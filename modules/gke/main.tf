@@ -7,6 +7,8 @@ resource "google_container_cluster" "gke_cluster" {
 
   node_config {
     machine_type = var.machine_type
+    disk_type    = "pd-standard"
+    disk_size_gb = 50
 
     oauth_scopes = [
       "https://www.googleapis.com/auth/logging.write",        # כתיבה ל-Cloud Logging

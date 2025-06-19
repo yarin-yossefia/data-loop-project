@@ -49,7 +49,7 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'gcp-terraform-service-account', variable: 'GOOGLE_CREDS_FILE')]) {
                     withEnv(["GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_CREDS_FILE}"]) {
-                        dir('infra/terraform') {
+                        dir('tenants/company-a/staging') {
                             sh 'terraform apply -auto-approve tfplan'
                         }
                     }
