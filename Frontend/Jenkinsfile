@@ -2,47 +2,41 @@ pipeline {
   agent any
 
   environment {
-    PROJECT_ID = 'your-gcp-project-id'
-    REGION = 'us-central1'  // או האזור שלך
-    GCR = "gcr.io/$PROJECT_ID"
-    IMAGE_BACKEND = "$GCR/backend-app"
-    IMAGE_FRONTEND = "$GCR/frontend-app"
+    PROJECT_ID = 'dataloop-project-463316'
+    REGION = 'us-central1'
+    REPO_NAME = 'dataloop-project'
+    IMAGE_NAME = 'frontend-image'
+    IMAGE_TAG = 'latest'
+    FULL_IMAGE_PATH = "${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/${IMAGE_NAME}:${IMAGE_TAG}"
   }
 
   stages {
-    stage('Checkout') {
+
+    stage('Download Service Account Key') {
       steps {
-        checkout scm
+        script {
+          withCredentials([file(credentialsId: 'gcp-jenkins-service-account', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
+            sh 'gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS'
+          }
+        }
       }
     }
 
-    stage('Build Backend Image') {
+    stage('Configure Docker for Artifact Registry') {
       steps {
-        sh 'docker build -t $IMAGE_BACKEND -f Dockerfile.backend .'
+        sh 'gcloud auth configure-docker $REGION-docker.pkg.dev --quiet'
       }
     }
 
-    stage('Build Frontend Image') {
+    stage('Build Docker Image') {
       steps {
-        sh 'docker build -t $IMAGE_FRONTEND -f Dockerfile.frontend .'
+        sh 'docker build -t $FULL_IMAGE_PATH .'
       }
     }
 
-    stage('Authenticate GCR') {
+    stage('Push Docker Image to Artifact Registry') {
       steps {
-        sh 'gcloud auth configure-docker'
-      }
-    }
-
-    stage('Push Backend Image') {
-      steps {
-        sh 'docker push $IMAGE_BACKEND'
-      }
-    }
-
-    stage('Push Frontend Image') {
-      steps {
-        sh 'docker push $IMAGE_FRONTEND'
+        sh 'docker push $FULL_IMAGE_PATH'
       }
     }
   }
