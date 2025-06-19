@@ -19,7 +19,7 @@ pipeline {
                 withCredentials([file(credentialsId: 'gcp-terraform-service-account', variable: 'GOOGLE_CREDS_FILE')]) {
                     // נותן ל-Terraform את קובץ ה-service account כמשתנה סביבה
                     withEnv(["GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_CREDS_FILE}"]) {
-                        dir('infra/terraform') {
+                        dir('tenants/company-a/staging') {
                             sh 'terraform init -input=false'
                             sh 'terraform validate'
                             sh 'terraform plan -out=tfplan'
