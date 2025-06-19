@@ -1,0 +1,49 @@
+pipeline {
+  agent any
+
+  environment {
+    PROJECT_ID = 'your-gcp-project-id'
+    REGION = 'us-central1'  // או האזור שלך
+    GCR = "gcr.io/$PROJECT_ID"
+    IMAGE_BACKEND = "$GCR/backend-app"
+    IMAGE_FRONTEND = "$GCR/frontend-app"
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+
+    stage('Build Backend Image') {
+      steps {
+        sh 'docker build -t $IMAGE_BACKEND -f Dockerfile.backend .'
+      }
+    }
+
+    stage('Build Frontend Image') {
+      steps {
+        sh 'docker build -t $IMAGE_FRONTEND -f Dockerfile.frontend .'
+      }
+    }
+
+    stage('Authenticate GCR') {
+      steps {
+        sh 'gcloud auth configure-docker'
+      }
+    }
+
+    stage('Push Backend Image') {
+      steps {
+        sh 'docker push $IMAGE_BACKEND'
+      }
+    }
+
+    stage('Push Frontend Image') {
+      steps {
+        sh 'docker push $IMAGE_FRONTEND'
+      }
+    }
+  }
+}

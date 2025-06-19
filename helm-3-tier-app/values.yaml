@@ -1,17 +1,21 @@
+namespace: services
+
 frontend:
-  image: nginx
-  replicas: 1
+  image: gcr.io/your-gcp-project-id/frontend-app
+  replicas: 2
   servicePort: 80
+  containerPort: 80
 
 backend:
-  image: hashicorp/http-echo
-  args: ["-text=hello"]
-  replicas: 1
-  servicePort: 5678
+  image: gcr.io/your-gcp-project-id/backend-app
+  replicas: 2
+  servicePort: 3000
+  containerPort: 3000
 
-postgres:
-  image: postgres:15
-  storage: 1Gi
-  username: admin
-  password: secret
-  database: appdb
+db:
+  image: postgres:14-alpine
+  username: myuser
+  password: mypassword
+  database: visits
+  pvcSize: 5Gi
+  servicePort: 5432
