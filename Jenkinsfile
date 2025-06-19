@@ -17,7 +17,7 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'gcp-terraform-service-account', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
 //                    withEnv(["GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_CREDS_FILE}"]) {
-                        dir('tenants/company-a/staging') {
+                        dir('terraform/tenants/company-a/staging') {
                             sh 'terraform init -input=false'
                             sh 'terraform validate'
                             sh 'terraform plan -out=tfplan'
@@ -47,7 +47,7 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'gcp-terraform-service-account', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
 //                    withEnv(["GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_CREDS_FILE}"]) {
-                        dir('tenants/company-a/staging') {
+                        dir('terraform/tenants/company-a/staging') {
                             sh 'terraform apply -auto-approve tfplan'
                         }
 //                    }
