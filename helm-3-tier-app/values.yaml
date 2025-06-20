@@ -1,9 +1,9 @@
 frontend:
-  image: us-central1-docker.pkg.dev/dataloop-project-463316/frontend-ci/frontend-image:11
+  image: us-central1-docker.pkg.dev/dataloop-project-463316/frontend-ci/frontend-image:latest
   port: 80
 
 backend:
-  image: us-central1-docker.pkg.dev/dataloop-project-463316/backend-ci/backend-image:2
+  image: us-central1-docker.pkg.dev/dataloop-project-463316/backend-ci/backend-image:latest
   port: 3000
 
 mongodb:
