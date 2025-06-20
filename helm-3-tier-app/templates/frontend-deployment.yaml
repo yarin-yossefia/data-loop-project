@@ -11,6 +11,8 @@ spec:
     metadata:
       labels:
         app: frontend
+      annotations:
+        iam.gke.io/gcp-service-account: gke-dataloop-project-service-a@dataloop-project-463316.iam.gserviceaccount.com
     spec:
       containers:
       - name: frontend
