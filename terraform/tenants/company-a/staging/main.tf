@@ -1,5 +1,5 @@
 module "gke" {
-  source       = "../../../terraform/modules/gke"
+  source       = "../../../modules/gke"
   project_id   = var.project_id
   cluster_name = var.cluster_name
   location     = var.region
