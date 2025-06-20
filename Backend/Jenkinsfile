@@ -1,0 +1,45 @@
+pipeline {
+  agent any
+
+  environment {
+    PROJECT_ID = 'dataloop-project-463316'
+    REGION = 'us-central1'
+    REPO_NAME = 'frontend-ci'
+    IMAGE_NAME = 'frontend-image'
+    IMAGE_TAG = "${BUILD_NUMBER}"
+    FULL_IMAGE_PATH = "${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/${IMAGE_NAME}:${IMAGE_TAG}"
+  }
+
+  stages {
+
+    stage('Download Service Account Key') {
+      steps {
+        script {
+          withCredentials([file(credentialsId: 'gcp-jenkins-service-account', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
+            sh 'gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS'
+          }
+        }
+      }
+    }
+
+    stage('Configure Docker for Artifact Registry') {
+      steps {
+        sh 'gcloud auth configure-docker $REGION-docker.pkg.dev --quiet'
+      }
+    }
+
+    stage('Build Docker Image') {
+      steps {
+        dir('Frontend/') {
+            sh 'docker build -t $FULL_IMAGE_PATH .'
+        }
+      }
+    }
+
+    stage('Push Docker Image to Artifact Registry') {
+      steps {
+        sh 'docker push $FULL_IMAGE_PATH'
+      }
+    }
+  }
+}
