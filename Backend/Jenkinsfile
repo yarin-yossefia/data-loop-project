@@ -4,8 +4,8 @@ pipeline {
   environment {
     PROJECT_ID = 'dataloop-project-463316'
     REGION = 'us-central1'
-    REPO_NAME = 'frontend-ci'
-    IMAGE_NAME = 'frontend-image'
+    REPO_NAME = 'backend-ci'
+    IMAGE_NAME = 'backend-image'
     IMAGE_TAG = "${BUILD_NUMBER}"
     FULL_IMAGE_PATH = "${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/${IMAGE_NAME}:${IMAGE_TAG}"
   }
@@ -30,7 +30,7 @@ pipeline {
 
     stage('Build Docker Image') {
       steps {
-        dir('Frontend/') {
+        dir('Backend/') {
             sh 'docker build -t $FULL_IMAGE_PATH .'
         }
       }
