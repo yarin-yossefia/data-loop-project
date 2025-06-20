@@ -13,10 +13,10 @@ mongodb:
     enabled: true
     size: 5Gi
 
-serviceAccount:
-  create: true
-  name: local-dataloop-project-service-account
-  gcpServiceAccountName: gke-dataloop-project-service-account
+#serviceAccount:
+#  create: true
+#  name: local-dataloop-project-service-account
+#  gcpServiceAccountName: gke-dataloop-project-service-account
 
-gcp:
-  projectId: dataloop-project-463316
+#gcp:
+#  projectId: dataloop-project-463316
