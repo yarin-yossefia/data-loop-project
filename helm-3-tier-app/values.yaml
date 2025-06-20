@@ -1,5 +1,5 @@
 frontend:
-  image: us-central1-docker.pkg.dev/dataloop-project-463316/frontend-ci/frontend-image:2
+  image: us-central1-docker.pkg.dev/dataloop-project-463316/frontend-ci/frontend-image:11
   port: 80
 
 backend:
