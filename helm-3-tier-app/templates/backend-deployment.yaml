@@ -2,9 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend
-  namespace: services
 spec:
-  replicas: {{ .Values.backend.replicas }}
+  replicas: 1
   selector:
     matchLabels:
       app: backend
@@ -14,8 +13,10 @@ spec:
         app: backend
     spec:
       containers:
-        - name: backend
-          image: {{ .Values.backend.image }}
-          args: {{ toJson .Values.backend.args }}
-          ports:
-            - containerPort: {{ .Values.backend.servicePort }}
+      - name: backend
+        image: {{ .Values.backend.image }}
+        ports:
+        - containerPort: {{ .Values.backend.port }}
+        env:
+        - name: MONGO_URL
+          value: mongodb://mongo:{{ .Values.mongodb.port }}

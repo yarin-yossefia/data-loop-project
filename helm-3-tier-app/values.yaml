@@ -1,21 +1,15 @@
-namespace: services
-
 frontend:
-  image: gcr.io/your-gcp-project-id/frontend-app
-  replicas: 2
-  servicePort: 80
-  containerPort: 80
+  image: us-central1-docker.pkg.dev/dataloop-project-463316/frontend-ci/frontend-image:2
+  port: 80
 
 backend:
-  image: gcr.io/your-gcp-project-id/backend-app
-  replicas: 2
-  servicePort: 3000
-  containerPort: 3000
+  image: us-central1-docker.pkg.dev/dataloop-project-463316/backend-ci/backend-image:2
+  port: 3000
 
-db:
-  image: postgres:14-alpine
-  username: myuser
-  password: mypassword
-  database: visits
-  pvcSize: 5Gi
-  servicePort: 5432
+mongodb:
+  image: mongo:4.4
+  port: 27017
+  persistence:
+    enabled: true
+    size: 5Gi
+

@@ -1,6 +1,5 @@
 apiVersion: v2
-name: three-tier-app
-description: A sample 3-tier app with frontend, backend, and Postgres
-type: application
+name: my-webapp-chart
+description: A Helm chart for a simple web app with frontend, backend and MongoDB
 version: 0.1.0
 appVersion: "1.0"
