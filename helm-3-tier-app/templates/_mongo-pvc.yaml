@@ -1,8 +1,7 @@
-# File: mongo-pvc.yaml
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: mongo-pvc 
+  name: mongo-pvc
 spec:
   accessModes:
     - ReadWriteOnce
