@@ -1,14 +1,12 @@
-# File: mongo-statefulset.yaml
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: mongo
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: mongo
-  serviceName: "mongo"
-  replicas: 
   template:
     metadata:
       labels:
@@ -20,10 +18,9 @@ spec:
         ports:
         - containerPort: {{ .Values.mongodb.port }}
         volumeMounts:
-        - name: mongo-data 
+        - name: mongo-data
           mountPath: /data/db
-        command: ["mongod", "--bind_ip_all", "--auth"]
-      volumes: 
-      - name: mongo-data 
+      volumes:
+      - name: mongo-data
         persistentVolumeClaim:
           claimName: mongo-pvc
