@@ -1,9 +1,0 @@
-prometheus: {}
-grafana:
-  adminPassword: prom-operator
-  ingress:
-    enabled: false
-  service:
-    type: LoadBalancer
-    port: 80
-    targetPort: 3000

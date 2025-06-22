@@ -1,0 +1,74 @@
+vault secrets enable datatbase
+
+vault write database/config/my-mongodb-connection \
+  plugin_name="mongodb-database-plugin" \
+  allowed_roles="mongodb-database-role" \
+  connection_url="mongodb://{{username}}:{{password}}@mongo.services.svc.cluster.local:27017" \
+  username="admin" \
+  password="1234"
+  
+  
+  
+vault write datatbase/roles/mongodb-database-role \
+  db_name="my-mongodb-connection" \
+  creation_statements='{ "db": "taskdb", "roles": [ { "role": "readWrite", "db": "taskdb" } ] }' \
+  default_ttl="1h" \
+  max_ttl="24h"
+  
+
+vault auth enable kubernetes
+
+export K8S_HOST=$(kubectl config view --minify --output 'jsonpath={.clusters[0].cluster.server}') #kubernetes API server
+kubectl create serviceaccount vault-auth -n vault #create service account for tokens checks
+kubectl create clusterrolebinding vault-token-reviewer --clusterrole=system:auth-delegator --serviceaccount=vault:vault-auth #role binding
+export VAULT_SA_JWT=$(kubectl create token vault-auth -n vault) #create a token for the service account
+
+export K8S_CACERT=$(kubectl config view --raw --minify --flatten --output 'jsonpath={.clusters[0].cluster.certificate-authority-data}' | base64 --decode) #certificate autority of k8s
+
+vault write auth/kubernetes/config \
+  kubernetes_host="${K8S_HOST}" \
+  token_reviewer_jwt="${VAULT_SA_JWT}" \
+  kubernetes_ca_cert="${K8S_CACERT}" \
+  disable_local_ca_jwt=true
+  
+  
+vault write auth/kubernetes/config \
+  kubernetes_host="https://104.197.101.182" \
+  token_reviewer_jwt="eyJhbGciOiJSUzI1NiIsImtpZCI6InFtd3NNOUdrTkJEa3dWXzd2U2tsR1BORzB1SG03U1ltSzR4UkxxWE1iN1kifQ.eyJhdWQiOlsiaHR0cHM6Ly9jb250YWluZXIuZ29vZ2xlYXBpcy5jb20vdjEvcHJvamVjdHMvZGF0YWxvb3AtcHJvamVjdC00NjMzMTYvbG9jYXRpb25zL3VzLWNlbnRyYWwxL2NsdXN0ZXJzL2NvbXBhbnktYS1zdGFnaW5nLWdrZS1jbHVzdGVyIl0sImV4cCI6MTc1MDU0NjY2NywiaWF0IjoxNzUwNTQzMDY3LCJpc3MiOiJodHRwczovL2NvbnRhaW5lci5nb29nbGVhcGlzLmNvbS92MS9wcm9qZWN0cy9kYXRhbG9vcC1wcm9qZWN0LTQ2MzMxNi9sb2NhdGlvbnMvdXMtY2VudHJhbDEvY2x1c3RlcnMvY29tcGFueS1hLXN0YWdpbmctZ2tlLWNsdXN0ZXIiLCJqdGkiOiJkNjRmM2ZjMS1hNmVhLTQ4M2UtOWMyOS0yZjVmMGI4YzU4N2MiLCJrdWJlcm5ldGVzLmlvIjp7Im5hbWVzcGFjZSI6InZhdWx0Iiwic2VydmljZWFjY291bnQiOnsibmFtZSI6InZhdWx0LWF1dGgiLCJ1aWQiOiJmYzk4Njc3Mi0zOGQwLTRhOWItOTMwZS0yNTkzNzFlYjgwOTYifX0sIm5iZiI6MTc1MDU0MzA2Nywic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50OnZhdWx0OnZhdWx0LWF1dGgifQ.G9AVkNPV9RkvVEzlvM70Ww-ADuV1rH3ZT3McVhnQaffKmzdGGmpY7yzJSBPwazFyklbWUDJ0BWGucpBOxCojDhnuDb8swjEyHhPCcZU7b2Zm7xoFuWhqOH3A-aeNI49o6lRMCS5vSx0GpmAMgjNQF3UnGpd428kusEvPFxx62bIyu9J_dj4wWPz5cdxgV5U85mTKa9HcwNFazQnYCEiJE-Sa3PoUSNEMfYePa1dfrooU6bD2szKrPuVcmharsGWrlyuL6qYN8ok1f-8Ocotbu9gaPj6eOO3BFimbFW7Vem-dB0bZXQ60xuBEanvXT9bIxL49jG__6utPS1J1ECH4BA" \
+  kubernetes_ca_cert="-----BEGIN CERTIFICATE-----
+MIIELTCCApWgAwIBAgIRAPc0VFu/WSmDFvm44phgqO8wDQYJKoZIhvcNAQELBQAw
+LzEtMCsGA1UEAxMkMmFiNTJkYjAtMTIzYy00YWFiLWJlMmYtOTJhMjg5OTY3MjNi
+MCAXDTI1MDYyMDE5MTA0MloYDzIwNTUwNjEzMjAxMDQyWjAvMS0wKwYDVQQDEyQy
+YWI1MmRiMC0xMjNjLTRhYWItYmUyZi05MmEyODk5NjcyM2IwggGiMA0GCSqGSIb3
+DQEBAQUAA4IBjwAwggGKAoIBgQDF7r7Brg7dzyBZt1U48gA8Q2gCtXEJXFPSb2pf
+c0P8gblMcpTMyEB9vFWso4c9jzYMZ8r1kXH4ZC3eSylZpOTEEcpoCGQ3Y/bujg3U
+ZEUVlvLH3VkHb1qu26Uj2iMq+Fo7dvMXaO0nDyBEIVLALCi8iNc1NBLJtKq0GPQD
+xqmMteCUEx4l2+ubVcKWxX0yMrFd4ol/tFLHzcIRokzNi6tK9GKJ9kFveIpRVcQd
+eJiXZZY4PVeZyO14ulGvdc4l0dohA9s0bDBghjWokwzQXZd+U4PE2vRMqTShS+cM
+Zmru6kakja+sPT7FGKIx7wTHsyhrhz384UF3ag2VjlS76A30lNp/WBeqApJ4K7xZ
+ycYUujUw5QECTIWLTD0jkzkNlxkouJ7IIgHkI5ey2RdcxjUIAL4nrqGOcJw5dB4T
+nSlR4ySdV+T+C03VjLOWFAU4mflsPzt9CjUI9tiCsKpSDDqxoT+how5Lbo6lWAFH
+zO1ABxTz3JwcP9BX6vEJqzFL/nkCAwEAAaNCMEAwDgYDVR0PAQH/BAQDAgIEMA8G
+A1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFN76xkfniDTOalcth0VyRy/JOQlxMA0G
+CSqGSIb3DQEBCwUAA4IBgQC/srvAMZoLiJqRwxWeJjhfkiaOzFzvmjn6Yg15GVFp
+5IJMyvHmhyvZvdd1Jij2J4/CrKDj8L6X13tlSPQHN7awDewM9k/zDGVJDB2X2mU/
+twuXoeTUSExZG4lyzuA4stXY2EF4xB3xnIGgIpMTQXSJynjtvA9NcFirfZ6zoOec
+1Fd+1KoawdtFCg0BrFsRi6flQnP/o3ih0l/CbzgEkNq3g7f12j+cl7q8+kw1ARXH
+mI3gVWFyayCDlwNGQePmCwjesXZ+bbugQhKQNyrNA+jNLcBcG2tnpkrnxeQ2sWq6
+uBbHSuusSAbF+a12b0WfyuHrclDM0MN2bXXBM+KfnW1wZcbgpuMo2j4IePm31Hio
+sSNrKhnwIX1T+401uizJdLaRRvz/SJ/oqqxgGfQOQt0uplxuPP3tcDmiBnVeSjta
+EDd69d4ja6tslgxNFTRVHGwBiFOJJh5V1tTQZ/6nBisBKTXiJ9krcteekh2u++Ye
+KX1kwhmwHkyxn+IJxTevT3Y=
+-----END CERTIFICATE-----" \
+  disable_local_ca_jwt=true
+  
+vault policy
+path "mongodb/creds/backend-app" {
+  capabilities = ["read"]
+}
+
+vault policy write backend-policy backend-policy.hcl
+
+
+
+

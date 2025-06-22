@@ -11,6 +11,10 @@ spec:
     metadata:
       labels:
         app: backend
+      annotations: 
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "mongodb-database-role"
+        vault.hashicorp.com/agent-inject-secret-db-creds.txt: "database/creds/mongodb-database-role"
     spec:
 #      serviceAccountName:  .Values.serviceAccount.name
       containers:
