@@ -1,14 +1,14 @@
+# my-kubernetes-project/my-ingress-chart/values.yaml
 ingress-nginx:
   controller:
     service:
       type: LoadBalancer
-      externalTrafficPolicy: Local
-      loadBalancerSourceRanges: 5.29.17.230/32
+      loadBalancerSourceRanges:
+        - "5.29.17.230/32/32"
 
 frontendIngress:
-  host: "dataloopwebapp.com"
+  host: "mywebapp.com"
   tlsSecretName: "frontend-tls-secret"
   serviceName: "frontend"
   servicePort: 80
-
 appNamespace: "services"
