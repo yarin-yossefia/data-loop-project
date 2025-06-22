@@ -1,4 +1,3 @@
-# my-kubernetes-project/my-ingress-chart/values.yaml
 ingress-nginx:
   controller:
     service:
