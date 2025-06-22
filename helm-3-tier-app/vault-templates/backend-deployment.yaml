@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        # זהו שם ה-Kubernetes Auth Role שלך (כמו ב-Vault UI: MongoDB-role)
+        vault.hashicorp.com/role: "mongodb-role"
+        # חשוב: בריחת תווים (escaping) עבור Helm Template
+        vault.hashicorp.com/agent-inject-template-mongo-url: |
+          {{ "{{" }}- with secret "database/creds/mongodb-database-role" -{{ "}}" }}
+          mongodb://{{ "{{" }} .Data.username {{ "}}" }}:{{ "{{" }} .Data.password {{ "}}" }}@mongo.services.svc.cluster.local:27017
+          {{ "{{" }}- end -{{ "}}" }}
+    spec:
+#      serviceAccountName:  .Values.serviceAccount.name
+      containers:
+      - name: backend
+        image: {{ .Values.backend.image }}
+        ports:
+        - containerPort: {{ .Values.backend.port }}
+        env:
+        - name: MONGO_URL
+          value: "file:///vault/secrets/mongo-url"

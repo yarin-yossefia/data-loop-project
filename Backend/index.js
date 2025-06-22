@@ -2,26 +2,15 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const fs = require('fs'); // <--- שורה חדשה: ייבוא מודול fs לקריאת קבצים
 
 // Connect to MongoDB
-// שינוי כאן: קוראים את ה-URL מקובץ ש-Vault Agent יזריק
-try {
-  const mongoUrlFromFile = fs.readFileSync('/vault/secrets/mongo-url', 'utf8').trim(); // <--- שורה חדשה: קריאת ה-URL מקובץ
-  mongoose.connect(mongoUrlFromFile, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => {
-      console.log('Connected to MongoDB successfully');
-    })
-    .catch((error) => {
-      console.error('Error connecting to MongoDB:', error);
-    });
-} catch (error) {
-  console.error('Failed to read MongoDB URL from file or connect:', error);
-  // חשוב: אם הקובץ לא קיים או שיש בעיה בחיבור, האפליקציה לא תוכל לפעול.
-  // כדאי להוסיף לוגיקה לטיפול בשגיאה (לדוגמה, יציאה מהתהליך או ניסיון חוזר).
-  process.exit(1); // יציאה מהתהליך אם הקובץ לא נקרא או יש בעיה בחיבור
-}
-
+mongoose.connect('mongodb://mongo:27017/taskdb', { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    console.log('Connected to MongoDB successfully');
+  })
+  .catch((error) => {
+    console.error('Error connecting to MongoDB:', error);
+  });
 
 const app = express();
 app.use(bodyParser.json());
