@@ -6,7 +6,7 @@ ingress-nginx:
         - "5.29.17.230/32"
 
 frontendIngress:
-  host: "35.184.100.128"
+  host: "dataloopwebapp.com"
   tlsSecretName: "frontend-tls-secret"
   serviceName: "frontend"
   servicePort: 80
