@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DOMAIN_OR_IP="dataloopwebapp.com"
+DOMAIN_OR_IP="35.184.100.128"
 SECRET_NAME="frontend-tls-secret"
 NAMESPACE="services"
 
