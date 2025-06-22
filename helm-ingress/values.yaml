@@ -3,7 +3,7 @@ ingress-nginx:
     service:
       type: LoadBalancer
       loadBalancerSourceRanges:
-        - "5.29.17.230/32/32"
+        - "5.29.17.230/32"
 
 frontendIngress:
   host: "mywebapp.com"
