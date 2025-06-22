@@ -11,10 +11,15 @@ spec:
     metadata:
       labels:
         app: backend
-      annotations: 
+      annotations: # <--- התחל מפה וודא שהכל תואם
         vault.hashicorp.com/agent-inject: "true"
-        vault.hashicorp.com/role: "mongodb-database-role"
-        vault.hashicorp.com/agent-inject-secret-db-creds.txt: "database/creds/mongodb-database-role"
+        # חשוב מאוד: זהו השם של ה-Kubernetes Auth Role שלך (כמו ב-Vault UI: MongoDB-role)
+        vault.hashicorp.com/role: "MongoDB-role" 
+        # Annotation זו תבנה את מחרוזת החיבור המלאה ותזריק אותה לקובץ /vault/secrets/mongo-url
+        vault.hashicorp.com/agent-inject-template-mongo-url: |
+          {{- with secret "database/creds/mongodb-database-role" -}} # <--- זהו השם של ה-Database Role שלך
+          mongodb://{{ .Data.username }}:{{ .Data.password }}@mongo.services.svc.cluster.local:27017/taskdb?authSource=admin
+          {{- end -}}
     spec:
 #      serviceAccountName:  .Values.serviceAccount.name
       containers:
@@ -24,4 +29,4 @@ spec:
         - containerPort: {{ .Values.backend.port }}
         env:
         - name: MONGO_URL
-          value: mongodb://mongo:{{ .Values.mongodb.port }}
+          value: "file:///vault/secrets/mongo-url"
