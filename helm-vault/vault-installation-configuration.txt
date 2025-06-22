@@ -63,7 +63,7 @@ KX1kwhmwHkyxn+IJxTevT3Y=
   disable_local_ca_jwt=true
   
 vault policy
-path "mongodb/creds/backend-app" {
+path "database/creds/backend-app" {
   capabilities = ["read"]
 }
 
@@ -71,4 +71,17 @@ vault policy write backend-policy backend-policy.hcl
 
 
 
+vault write auth/kubernetes/role/mongodb-role \
+    alias_name_source="serviceaccount_uid" \
+    bound_service_account_names="default" \
+    bound_service_account_namespaces="services" \
+    token_bound_cidrs="" \
+    token_explicit_max_ttl=0s \
+    token_max_ttl=0s \
+    token_no_default_policy=false \
+    token_num_uses=0 \
+    token_period=0s \
+    token_policies="mongodb-access-policy" \
+    token_ttl=0s \
+    token_type="default"
 
