@@ -85,3 +85,21 @@ vault write auth/kubernetes/role/mongodb-role \
     token_ttl=0s \
     token_type="default"
 
+	
+	
+vault auth enable approle
+vault write auth/approle/role/backend-approle-role \
+    token_policies="backend-policy" \
+    token_ttl=1h \
+    token_max_ttl=24h
+vault read auth/approle/role/backend-approle-role/role-id
+vault write -f auth/approle/role/backend-approle-role/secret-id
+
+
+role_id    fb24ebe5-50e3-b3cf-bfb2-cfc0a80ac3d5
+secret_id             1f9f6599-23b8-7749-4594-bfe93118f79e	
+
+
+kubectl create secret generic backend-approle-secret \
+  --from-literal=secret_id='<ה-SECRET_ID שקיבלת בשלב הקודם>' \
+
