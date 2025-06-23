@@ -1,0 +1,7 @@
+1. create jenkins job for tfstates buckets and folders for every client/environment
+2. reduce permissions to tf,k8s
+3. jenkins permissions by user 
+backend.tf terraform file should be as a module and be called from main.tf
+creating a pv for the grafana so no data loss
+terraform service account instead of default create sa whith limited permissions - gcs bucket read and create , gke create 
+use config map for the service name parameters for traffic between frontned->backend->DB

@@ -1,0 +1,14 @@
+GCP ACCOUNT
+djsstorm@gmail.com
+sagiyos5563
+
+Jenkins - http://34.134.130.126:8080/
+yarinyossefia
+yarin123
+
+
+grafana - http://35.239.183.150
+admin
+prom-operator
+
+webapp-https://dataloopwebapp.com /
