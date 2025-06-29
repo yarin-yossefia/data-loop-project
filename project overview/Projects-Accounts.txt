@@ -11,4 +11,4 @@ grafana - http://35.239.183.150
 admin
 prom-operator
 
-webapp-https://dataloopwebapp.com /
+webapp-https://dataloopwebapp.com /dataloopwebapp-staging.com

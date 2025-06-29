@@ -1,7 +1,10 @@
 1. create jenkins job for tfstates buckets and folders for every client/environment
 2. reduce permissions to tf,k8s
 3. jenkins permissions by user 
-backend.tf terraform file should be as a module and be called from main.tf
-creating a pv for the grafana so no data loss
-terraform service account instead of default create sa whith limited permissions - gcs bucket read and create , gke create 
-use config map for the service name parameters for traffic between frontned->backend->DB
+4. backend.tf terraform file should be as a module and be called from main.tf
+5. creating a pv for the grafana so no data loss
+6. terraform service account instead of default create sa whith limited permissions - gcs bucket read and create , gke create 
+7. use config map for the svc name parameters for traffic between frontned->backend->DB
+8.fix app domain name per tenant per environment from dataloopwebapp.com to dataloopwebapp-company-a-staging.com for example 
+9. gke cluster only per environment and not also per tenant so ingress would controll all customers in the same environment .
+10. create a script / jenkins job / Argo cd to run the application - all helm commands,NS,certificates

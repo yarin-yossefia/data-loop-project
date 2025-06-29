@@ -23,13 +23,13 @@ pipeline {
             steps {
                 script {
                     def userInput = input(
-                        id: 'ConfirmApply', message: 'להריץ Terraform apply?',
+                        id: 'ConfirmApply', message: 'Proceed with Terraform apply?',
                         parameters: [
-                            choice(name: 'Action', choices: ['Yes', 'No'], description: 'לבחור האם להחיל את השינויים')
+                            choice(name: 'Action', choices: ['Yes', 'No'], description: 'Choose whether to apply the changes')
                         ]
                     )
                     if (userInput != 'Yes') {
-                        error("המשתמש בחר לא להמשיך ל-apply ❌")
+                        error("User chose not to proceed with apply ❌")
                     }
                 }
             }

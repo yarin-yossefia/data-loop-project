@@ -1,7 +1,7 @@
 #!/bin/bash
 
-DOMAIN="dataloopwebapp.com"
-SECRET_NAME="frontend-tls-secret"
+DOMAIN="dataloopwebapp-company-b.com"
+SECRET_NAME="frontend-tls-company-b-production-secret"
 NAMESPACE="services"
 
 echo "Generating self-signed certificate for: $DOMAIN"
