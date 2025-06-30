@@ -8,3 +8,5 @@
 8.fix app domain name per tenant per environment from dataloopwebapp.com to dataloopwebapp-company-a-staging.com for example 
 9. gke cluster only per environment and not also per tenant so ingress would controll all customers in the same environment .
 10. create a script / jenkins job / Argo cd to run the application - all helm commands,NS,certificates
+11. manage grafana password with K8s secret 
+12. manage grafana under the same ingress controller 

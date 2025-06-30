@@ -7,7 +7,7 @@ yarinyossefia
 yarin123
 
 
-grafana - http://35.239.183.150
+grafana - http://35.222.126.102/
 admin
 prom-operator
 
